@@ -18,8 +18,6 @@ const Login = () => {
   const [timer, setTimer] = useState(20)
   const [canResend, setCanResend] = useState(false)
 
-  console.log(otp, email)
-
   // Start OTP timer
   useEffect(() => {
     if (step !== 2 || timer === 0) return

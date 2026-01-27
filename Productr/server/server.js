@@ -10,7 +10,7 @@ dotenv.config();
 
 // Enable CORS for your frontend
 app.use(cors({
-  origin: process.env.CORS_ORIGIN1 || "http://localhost:8081",
+  origin: process.env.CORS_ORIGIN1,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true,
 }));
