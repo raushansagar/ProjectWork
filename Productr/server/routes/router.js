@@ -1,5 +1,5 @@
 import Router from 'express';
-import {register, login, sendOtp, logout, addProduct, editProduct, deleteProduct, verifyUser, findProduct} from '../controllers/controllers.js'
+import {register, login, sendOtp, logout, addProduct, editProduct, deleteProduct, verifyUser, findProduct, publish} from '../controllers/controllers.js'
 import verifyJWT from '../middleware/verifyJWT.js';
 import upload from '../middleware/multer.js'
 
@@ -49,14 +49,27 @@ router.route("/product/add").post(
     addProduct
 )
 
-
+// find product
 router.route("/find/product").post(verifyJWT, findProduct);
 
 // edit product
-// router.route("product/edit").put()
+router.route("/product/edit").post(
+    upload.fields([
+        {
+            name : "productImages",
+            maxCount: 5,
+        }
+    ]),
+    verifyJWT,
+    editProduct
+)
+
+
+router.route("/product/publish").post(verifyJWT, publish);
 
 // // delete product
-// router.route("product/delete").delete()
+router.route("/product/delete").post(verifyJWT, deleteProduct);
+
 
 
 

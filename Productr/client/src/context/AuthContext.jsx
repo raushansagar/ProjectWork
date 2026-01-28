@@ -16,6 +16,10 @@ export function AuthProvider({ children }) {
     const [addProduct, setAddProduct] = useState(true);
     const [signup, setSignup] = useState(false);
     const [product, setProduct] = useState([]);
+    const [recOtp, setRevOtp] = useState("");
+    const [productEdit, setProductEdit] = useState(null);
+    const [showEdit, setShowEdit] = useState(false);
+
 
 
 
@@ -32,7 +36,6 @@ export function AuthProvider({ children }) {
             try {
                 const res = await httpClient.post("/productr/v2/user/verifyUser");
                 const res2 = await httpClient.post("productr/v2/find/product")
-                console.log(res2)
                 setProduct(Array.isArray(res2.data.data.product) ? res2.data.data.product : []);
                 setUser("login");
             } catch {[[]]
@@ -73,13 +76,14 @@ export function AuthProvider({ children }) {
         }
     };
 
+    console.log("Login Otp",recOtp);
 
 
     // user send otp
     const userOtp = async (data) => {
         try {
-
             const res = await httpClient.post("productr/v2/user/otp", { email : data})
+            setRevOtp(res.data.data.otp);
             return res;
         } catch {
             throw error;
@@ -117,7 +121,7 @@ export function AuthProvider({ children }) {
         }
     };
 
-
+    // find product
     const findProduct = async (formData) => {
         try {
 
@@ -131,10 +135,12 @@ export function AuthProvider({ children }) {
     };
 
 
+    // delete product 
     const deleteProduct = async ( id ) => {
         try {
-
-            const res = await httpClient.post("productr/v2/delete/product", { id })
+            const res = await httpClient.post("productr/v2/product/delete", { id })
+            console.log(res);
+            setProduct(Array.isArray(res.data.data.product) ? res.data.data.product : []);
             return res.data.data;
         } catch {
             throw error;
@@ -144,6 +150,31 @@ export function AuthProvider({ children }) {
     };
 
 
+    // update  product
+    const updateProduct = async (formData) => {
+        try {
+
+            const res = await httpClient.post("productr/v2/product/edit", formData)
+            return res;
+        } catch {
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+    // publish
+    const publish = async (data) => {
+        try {
+            const res = await httpClient.post("productr/v2/product/publish", {ProductId : data})
+            return res;
+        } catch {
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <AuthContext.Provider
@@ -162,7 +193,13 @@ export function AuthProvider({ children }) {
                 setSignup,
                 logoutUser,
                 product, 
-                setProduct
+                setProduct,
+                showEdit,
+                setShowEdit,
+                productEdit, 
+                setProductEdit,
+                updateProduct,
+                publish
             }} >
             {children}
         </AuthContext.Provider>

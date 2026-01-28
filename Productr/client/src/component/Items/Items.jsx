@@ -5,20 +5,21 @@ import { toast } from "react-toastify";
 
 const Items = ({ onClose }) => {
 
-    const { addProduct, setAddProduct, addProducts } = useContext(AuthContext)
-
+    const { addProduct, setAddProduct, addProducts, productEdit, showEdit, setProduct, updateProduct} = useContext(AuthContext)
 
     const [formData, setFormData] = useState({
-        name: '',
-        type: '',
-        quantity: '',
-        mrp: '',
-        sellingPrice: '',
-        brand: '',
-        eligibility: 'Yes'
+        name: (showEdit ? productEdit.productName.toString() : ""),
+        type: (showEdit ? productEdit.productType.toString() : ""),
+        quantity: (showEdit ? productEdit.quantityStock.toString() : ""),
+        mrp: (showEdit ? productEdit.mrp.toString() : ""),
+        sellingPrice: (showEdit ? productEdit.sellingPrice.toString() : ""),
+        brand: (showEdit ? productEdit.brandName.toString() : ""),
+        eligibility: (showEdit ? productEdit.exchangeOrReturnEligible.toString() : "Yes")
     });
 
+
     const onAddProduct = async () => {
+
         const {
             name,
             type,
@@ -52,7 +53,7 @@ const Items = ({ onClose }) => {
             return;
         }
 
-        if (images.length === 0) {
+        if (images.length === 0 && !showEdit) {
             toast.error("Please upload at least one product image");
             return;
         }
@@ -74,12 +75,21 @@ const Items = ({ onClose }) => {
             images.forEach((img) => {
                 data.append("productImages", img.file);
             });
+            
 
-            const res = await addProducts(data);
-
-            toast.success("Product added successfully");
-            setAddProduct(!addProduct);
-
+            let res;
+            if(showEdit){
+                data.append("ProductId", productEdit._id);
+                res = await updateProduct(data);
+                setProduct(Array.isArray(res.data.data.product) ? res.data.data.product : []);
+                toast.success("Product update successfully");
+                setAddProduct(!addProduct);
+            }
+            else{
+                res = await addProducts(data);
+                toast.success("Product added successfully");
+                setAddProduct(!addProduct);
+            }
         } catch (error) {
             console.error(error);
             toast.error("Failed to add product");
@@ -116,7 +126,7 @@ const Items = ({ onClose }) => {
         <div className="fixed inset-0 bg-[#334155]/60 flex justify-center items-center z-50 p-4 font-sans">
             <div className="bg-white w-full max-w-[420px] rounded-xl shadow-2xl flex flex-col overflow-hidden">
                 <div className="px-6 py-4 flex justify-between items-center border-b border-gray-100">
-                    <h2 className="text-[17px] font-semibold text-gray-700">Add Product</h2>
+                    <h2 className="text-[17px] font-semibold text-gray-700">{!showEdit ? "Add Product" : "Update Product"}</h2>
                     <button onClick={() => setAddProduct(!addProduct)} className="text-gray-400 cursor-pointer hover:text-gray-600 text-2xl font-light">&times;</button>
                 </div>
                 <div className="p-6 space-y-4 overflow-y-auto max-h-[75vh]">
@@ -218,7 +228,7 @@ const Items = ({ onClose }) => {
                 </div>
                 <div className="p-5 border-t border-gray-50 flex justify-end">
                     <button onClick={() => onAddProduct()} className="bg-[#1D29BF] hover:bg-[#1621a1] text-white text-sm font-medium px-8 py-2.5 rounded-lg shadow-sm">
-                        Create
+                        {showEdit ? "Update" : "Create"}
                     </button>
                 </div>
             </div>

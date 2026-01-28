@@ -4,12 +4,26 @@ import { AuthContext } from "../../context/AuthContext";
 
 const ProductCard = ({ product }) => {
 
-    const { deleteProduct } = useContext(AuthContext);
+    const { deleteProductm, showEdit, setShowEdit, setProductEdit, setAddProduct, addProduct, deleteProduct, publish } = useContext(AuthContext);
 
     const onHandelDelete =  async( id ) => {
         const res = await deleteProduct( id );
     }
 
+    const onHandelEditItems = async() => {
+      console.log(product)
+      setProductEdit(product);
+      setShowEdit(true)
+      setAddProduct(false)
+    }
+
+    const onHandelAddPublish = async( data )=> {
+        try {
+          const res = await publish(data);
+        } catch (error) {
+          
+        }
+    }
 
 
   const images = product.productImage || [];
@@ -17,8 +31,6 @@ const ProductCard = ({ product }) => {
 
   return (
     <div className="w-[360px] bg-white rounded-xl shadow-md p-4 flex flex-col gap-3">
-      
-      {/* Image Section */}
       <div className="h-[180px] w-full bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
         {images.length > 0 ? (
           <img
@@ -30,8 +42,6 @@ const ProductCard = ({ product }) => {
           <p className="text-gray-400 text-sm">No Image</p>
         )}
       </div>
-
-      {/* Image Dots */}
       {images.length > 1 && (
         <div className="flex justify-center gap-1">
           {images.map((_, index) => (
@@ -72,20 +82,20 @@ const ProductCard = ({ product }) => {
       {/* Buttons */}
       <div className="flex gap-2 mt-3">
         {product.isActive ? (
-          <button className="flex-1 bg-green-500 text-white py-2 rounded-md">
-            Unpublish
+          <button onClick={() => onHandelAddPublish(product._id)} className="flex-1 bg-green-500 text-white py-2 rounded-md cursor-pointer">
+            Publish
           </button>
         ) : (
-          <button className="flex-1 bg-blue-600 text-white py-2 rounded-md">
-            Publish
+          <button onClick={() => onHandelAddPublish(product._id)} className="flex-1 bg-blue-600 text-white py-2 rounded-md cursor-pointer">
+            Unpublish
           </button>
         )}
 
-        <button className="flex-1 border border-gray-400 py-2 rounded-md">
+        <button onClick={() => onHandelEditItems(product)} className="flex-1 border border-gray-400 py-2 rounded-md cursor-pointer">
           Edit
         </button>
 
-        <button onClick={() => onHandelDelete(product._id)} className="w-10 border border-red-400 text-red-500 rounded-md">
+        <button onClick={() => onHandelDelete(product._id)} className="w-10 border border-red-400 text-red-500 rounded-md cursor-pointer">
           🗑
         </button>
       </div>

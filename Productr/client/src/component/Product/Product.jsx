@@ -5,11 +5,18 @@ import ProductCard from '../ProductCard/ProductCard';
 
 
 const Product = () => {
-  const { addProduct, setAddProduct, findProduct, product, setProduct } = useContext(AuthContext);
+  const { addProduct, setAddProduct, findProduct, product, setProduct, setShowEdit, setProductEdit } = useContext(AuthContext);
 
   const onHandlerProduct = async () => {
     const res = await findProduct()
     setProduct(Array.isArray(res.product) ? res.product : []);
+  }
+
+
+  const onHandelAddProduct = () => {
+    setAddProduct(!addProduct)
+    setShowEdit(false);
+    setProductEdit(null);
   }
 
   return (
@@ -17,7 +24,10 @@ const Product = () => {
       {/* <ProductCard/> */}
       <div className='w-full h-[48px] flex flex-row justify-between items-center pl-3 pr-3'>
         <p>Products</p>
-        <div className='flex flex-row items-center space-x-1 cursor-pointer' onClick={() => setAddProduct(!addProduct)}>
+        <div className='bg-amber-400 h-full w-40 flex flex-col  justify-center items-center rounded-2xl '>
+          <p onClick={() => onHandlerProduct()} className='cursor-pointer'>Refresh Product</p>
+        </div>
+        <div className='flex flex-row items-center space-x-1 cursor-pointer' onClick={() => onHandelAddProduct()}>
           <ion-icon name="add-outline"></ion-icon>
           <p>Add Products</p>
         </div>
@@ -47,7 +57,11 @@ const Product = () => {
             </div>
           </>)
           :
-          (<Items />)
+          (
+            <>
+              <Items />
+            </>
+          )
         }
       </div>
     </>
