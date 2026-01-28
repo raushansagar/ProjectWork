@@ -8,12 +8,28 @@ import router from './routes/router.js'
 dotenv.config();
 
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://productr-frontend-6j3v.onrender.com",
+];
+
+
 // Enable CORS for your frontend
-app.use(cors({
-  origin: process.env.CORS_ORIGIN1,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  })
+);
 
 
 

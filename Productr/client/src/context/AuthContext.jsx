@@ -36,8 +36,8 @@ export function AuthProvider({ children }) {
             try {
                 const res = await httpClient.post("/productr/v2/user/verifyUser");
                 const res2 = await httpClient.post("productr/v2/find/product")
-                setProduct(Array.isArray(res2.data.data.product) ? res2.data.data.product : []);
                 setUser("login");
+                setProduct(Array.isArray(res2.data.data.product) ? res2.data.data.product : []);
             } catch {[[]]
                 setUser(null);
             } finally {
