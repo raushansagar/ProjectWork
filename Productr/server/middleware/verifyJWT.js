@@ -15,6 +15,8 @@ const verifyJWT = asyncHandler(async (req, res, next) => {
             token = req.headers.authorization.split(" ")[1];
         }
 
+        console.log(token)
+
         // check token 
         if (!token || token == null) {
             throw new ApiError(401, "Unauthorized: No access token provided");

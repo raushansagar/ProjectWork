@@ -5,26 +5,28 @@ import cookieParser from 'cookie-parser';
 import { connectDB } from './database/database.js';
 import router from './routes/router.js'
 
-dotenv.config();
+
+dotenv.config({ path: "./.env" });
 
 
+// Enable CORS for your frontend
 const allowedOrigins = [
   "http://localhost:5173",
   "https://productr-frontend-6j3v.onrender.com",
 ];
 
 
-// Enable CORS for your frontend
 app.use(
   cors({
     origin: (origin, callback) => {
+      // Allow server-to-server & Postman
       if (!origin) return callback(null, true);
 
       if (allowedOrigins.includes(origin)) {
         return callback(null, true);
       }
 
-      return callback(new Error("Not allowed by CORS"));
+      return callback(null, false);
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],

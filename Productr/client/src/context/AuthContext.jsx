@@ -53,6 +53,7 @@ export function AuthProvider({ children }) {
     const loginUser = async ( data ) => {
         try {
             const res = await httpClient.post("/productr/v2/user/login", {data})
+            console.log(res)
             setUser("login");
             return res;
         } catch {

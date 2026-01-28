@@ -76,8 +76,8 @@ const Login = () => {
       otp : otp.join(""),
     };
 
-
     const res = await loginUser(data);
+    console.log(res);
   }
 
   const resendOtp = async () => {

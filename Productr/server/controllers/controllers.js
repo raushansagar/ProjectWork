@@ -171,7 +171,7 @@ const login = asyncHandler(async (req, res) => {
     // save refreshToken in cookie
     res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: "production",
         sameSite: "none",
         maxAge: 9 * 24 * 60 * 60 * 1000,  // 9 day
         path: "/",
@@ -180,11 +180,14 @@ const login = asyncHandler(async (req, res) => {
     // save accessToken in cookie
     res.cookie("accessToken", accessToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: "production",
         sameSite: "none",
         maxAge: 60 * 60 * 1000, // 15 min
         path: "/",
     });
+
+
+    console.log("login User", user)
 
 
     // send response
